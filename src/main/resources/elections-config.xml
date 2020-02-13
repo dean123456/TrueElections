@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <properties resource='mysql.jdbc.elections_properties'/>
+
+    <settings>
+        <!-- instead of setting here, it is possible to set Configuration properties after creating SqlSessionFactory  -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type='JDBC'/>
+            <dataSource type='POOLED'>
+                <property name='driver' value='${jdbc.driverClassName}'/>
+                <property name='url' value='${jdbc.url}'/>
+                <property name='username' value='${jdbc.username}'/>
+                <property name='password' value='${jdbc.password}'/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper class="net.thumbtack.school.elections.mappers.VoterMapper"/>
+        <mapper class="net.thumbtack.school.elections.mappers.ProgrammeMapper"/>
+        <mapper class="net.thumbtack.school.elections.mappers.CandidateMapper"/>
+        <mapper class="net.thumbtack.school.elections.mappers.ProposalMapper"/>
+        <mapper class="net.thumbtack.school.elections.mappers.RatingMapper"/>
+        <mapper class="net.thumbtack.school.elections.mappers.ElectionMapper"/>
+    </mappers>
+
+</configuration>

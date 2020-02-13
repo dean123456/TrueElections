@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.school.database.mybatis.mappers.SchoolMapper">
+    <resultMap id="resultSchool" type="net.thumbtack.school.database.model.School">
+        <id property="id" column="id"/>
+        <result property="name" column="school_name"/>
+        <result property="year" column="year_of_study"/>
+        <collection property="groups" column="id" javaType="java.util.List"
+                    ofType="net.thumbtack.school.database.model.Group">
+            <result property="id" column="group_id"/>
+            <result property="name" column="group_name"/>
+            <result property="room" column="room"/>
+            <collection property="trainees" column="id" javaType="java.util.List"
+                        ofType="net.thumbtack.school.database.model.Trainee">
+                <result property="id" column="trainee_id"/>
+                <result property="firstName" column="first_name"/>
+                <result property="lastName" column="last_name"/>
+                <result property="rating" column="rating"/>
+            </collection>
+            <collection property="subjects" column="id" javaType="java.util.List"
+                        ofType="net.thumbtack.school.database.model.Subject">
+                <result property="id" column="subject_id"/>
+                <result property="name" column="subject_name"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getAllUsingJoin" resultMap="resultSchool">
+        SELECT school.id, school_name, year_of_study, d.id AS group_id, group_name, room,
+        trainee_id, first_name, last_name, rating, subject_id, subject_name
+        FROM school INNER JOIN
+        (SELECT * FROM
+        (SELECT * FROM school_group INNER JOIN
+        (SELECT subject_id, subject_name, group_id FROM subj INNER JOIN group_subject ON subj.id = subject_id) b ON id =
+        group_id) a
+        LEFT JOIN
+        (SELECT trainee.id AS trainee_id, school_group.id, first_name, last_name, rating FROM school_group INNER JOIN
+        trainee ON school_group.id = group_id) c
+        USING (id)) d
+        ON school.id = d.school_id
+    </select>
+
+
+</mapper>
